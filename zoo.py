@@ -7,7 +7,7 @@ VERSION = '0.1.1'
 
 
 if __name__ == '__main__':
-    st.load_environ_settings(x)
+    st.load_environ_settings()
 
     all_service_files = st.get_service_files()
     services_configs = st.parse_service_files(all_service_files)
