@@ -9,6 +9,7 @@ import syst.tools.mproto as mproto
 from syst.tools.output import println
 
 
+SESSION_TIMEOUT = 720
 server = sys.modules[__name__]
 addr = ('', 7777)
 
@@ -49,6 +50,7 @@ def handle_connection(conn):
 
     try:
         while True:
+            conn.settimeout(SESSION_TIMEOUT)
             raw_packet = mproto.recvmsg(conn)
 
             if raw_packet == b'':
@@ -64,8 +66,12 @@ def handle_connection(conn):
             mworker.process_update(server, packet_object, threaded=False, check_all=False)
 
     except (BrokenPipeError,):
-        conn.close()
-        println('SERVER', f'{ip}:{port} - disconnected')
+        pass
+    except socket.timeout:
+        mproto.sendmsg(conn, dumps({'succ': False, 'data': 'disconnected (timeout reached)'}).encode())
+
+    conn.close()
+    println('SERVER', f'{ip}:{port} - disconnected')
 
 
 def validate_packet(raw_packet):

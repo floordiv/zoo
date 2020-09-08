@@ -1,4 +1,13 @@
-from os.path import expanduser
+def remove_comments(line):
+    in_string = False
+
+    for index, letter in enumerate(line):
+        if letter == '"':
+            in_string = not in_string
+        elif not in_string and letter == '#':
+            return line[:index]
+
+    return line
 
 
 def remove_spaces(text):
@@ -31,7 +40,7 @@ def split_by_equality(text):
 
 
 def parse_value(value):
-    value = value.rstrip()
+    value = value.rstrip()   # remove escape-characters
 
     if value[0] == '"' and value[-1] == '"':
         return value[1:-1]
@@ -45,11 +54,13 @@ def parse_value(value):
     return value  # also string, but without quotes
 
 
-def load(path, ignore_case=True):
+def load(path, ignore_case=True, parse_types=True):
     data = {}
 
     with open(path) as fd:
         for line_index, line in enumerate(fd):
+            line = remove_comments(line)
+
             if line.strip().strip('\t') == '':
                 continue
 
@@ -63,6 +74,9 @@ def load(path, ignore_case=True):
             if ignore_case:
                 key = key.lower()
 
-            data[key] = parse_value(value)
+            if parse_types:
+                value = parse_value(value)
+
+            data[key] = value
 
     return data

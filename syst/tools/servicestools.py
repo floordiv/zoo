@@ -1,7 +1,10 @@
 from sys import argv
+from os import environ
 from threading import Thread
 from os.path import dirname, basename, expanduser
 
+from syst.tools.output import println
+from syst.tools.configreader import load
 from syst.types import Config, Reader, Services
 from syst.tools.process import run as run_process
 
@@ -52,6 +55,16 @@ def parse_service_files(service_files):
         cooked_services.append(service)
 
     return cooked_services
+
+
+def load_environ_settings(file='syst/environ.settings'):
+    try:
+        environ_config = load(file, ignore_case=False, parse_types=False)
+
+        for key, value in environ_config.items():
+            environ[key] = str(value)
+    except FileNotFoundError:
+        println('LOAD-ENV-SETTINGS', f'Failed: "{file}" not found')
 
 
 def run_services(services_list):
