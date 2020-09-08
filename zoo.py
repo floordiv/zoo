@@ -1,4 +1,4 @@
-from os import abort, environ
+from os import abort
 
 import syst.tools.servicestools as st
 
