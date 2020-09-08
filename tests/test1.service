@@ -1,0 +1,3 @@
+name="Test 1"
+path="~/Documents/py/zoo/tests"
+cmd="python3 test1.py"
