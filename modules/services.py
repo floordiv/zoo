@@ -5,7 +5,7 @@ from syst.types import Services, PersonalReader
 lines_read = {}   # conn: lines_read
 
 
-@mworker.handler(lambda packet: packet.header == 'get-services')
+@mworker.handler(lambda packet: packet.header == 'get-services-names')
 def get_services_list(server, packet):
     services = [service for service, reader in Services().get_all().items()]
     server.send(packet, {'succ': True, 'data': services})
@@ -42,3 +42,14 @@ def get_output_updates(server, packet):
     lines_read[packet.conn] += len(update_lines) - 1
 
     server.send(packet, {'succ': True, 'data': update_lines})
+
+
+@mworker.handler(lambda packet: packet.header == 'get-services')
+def get_services(server, packet):
+    services = Services().get_all()
+    all_services = []
+
+    for name, reader in services.items():
+        all_services.append({'name': name, **reader.serialize()})
+
+    server.send(packet, {'succ': True, 'data': all_services})
