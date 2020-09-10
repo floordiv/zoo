@@ -22,13 +22,20 @@ def get_service_files():
     return [file for file in argv[1:] if file.endswith('.service')]
 
 
+def fill_service_file(config, fill_by: dict):
+    for var, defailt_val in fill_by.items():
+        if not hasattr(config, var):
+            setattr(config, var, defailt_val)
+
+    return config
+
+
 def parse_service_files(service_files):
     cooked_services = []
 
-    # print(service_files)
-
     for file in service_files:
         file = expanduser(file)
+        file_dirname = dirname(file)
 
         try:
             service = Config(file)
@@ -36,20 +43,17 @@ def parse_service_files(service_files):
             print(f'[ZOO] Error: service-file "{file}" not found')
             continue
 
-        if not hasattr(service, 'path') or service.path == '.':
-            file_path = dirname(file)
-
-            if not file_path:
-                file_path = './'
-
-            service.path = file_path
-
-        if not hasattr(service, 'name'):
-            service.name = basename(file)[:-len('.service')]
-
         if not hasattr(service, 'cmd'):
             print(f'[ZOO] Error: service-file "{file}" does not contains "cmd" value')
             continue
+
+        fill_by = {
+            'path': file_dirname if file_dirname else './',
+            'name': basename(file)[:-len('.service')],
+            'autorestart': False,
+            'restart_timeout': .5,
+        }
+        service = fill_service_file(service, fill_by)
 
         service.path = expanduser(service.path)
         cooked_services.append(service)
@@ -71,4 +75,6 @@ def run_services(services_list):
     for service in services_list:
         reader = Reader()
         services.add(service.name, reader)
-        Thread(target=run_process, args=(service.cmd, reader), kwargs={'path': service.path}).start()
+        Thread(target=run_process, args=(service.cmd, reader), kwargs={'path': service.path,
+                                                                       'autorestart': service.autorestart,
+                                                                       'autorestart_timeout': service.restart_timeout}).start()
