@@ -6,10 +6,8 @@ from syst.tools.output import println
 
 
 def run(cmd, reader, path='.', autorestart=False, autorestart_timeout=.5):
-    restarts = 1
-
     while True:
-        println('PROCESS', f'[{restarts}] Started process: ' + cmd)
+        println('PROCESS', f'[{reader.restarts}] Started process: ' + cmd)
 
         reader.finished = False
         reader.returncode = None
@@ -23,13 +21,13 @@ def run(cmd, reader, path='.', autorestart=False, autorestart_timeout=.5):
 
                 reader.write(char.decode())
 
-        println('PROCESS', f'[{restarts}] Process finished with exit-code {proc.returncode}: {cmd}')
+        println('PROCESS', f'[{reader.restarts}] Process finished with exit-code {proc.returncode}: {cmd}')
 
         reader.finished = True
         reader.returncode = proc.returncode
-        restarts += 1
 
         if not autorestart:
             return
 
         sleep(autorestart_timeout)
+        reader.restarts += 1

@@ -35,6 +35,7 @@ class Reader:
         self.output = ['']
         self.finished = False
         self.returncode = None
+        self.restarts = 0
 
     def write(self, char, **kwargs):
         if char == '\n':
@@ -45,12 +46,14 @@ class Reader:
     def serialize(self):
         return {'out': '\n'.join(self.output),
                 'finished': self.finished,
-                'returncode': self.returncode}
+                'returncode': self.returncode,
+                'restarts': self.restarts}
 
     def de_serialize(self, data):
         self.output = data['out'].splitlines()
         self.finished = data['finished']
         self.returncode = data['returncode']
+        self.restarts = data['restarts']
 
     def __str__(self):
         return dumps(self.serialize(), indent=2)

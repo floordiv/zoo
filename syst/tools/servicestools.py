@@ -40,11 +40,11 @@ def parse_service_files(service_files):
         try:
             service = Config(file)
         except FileNotFoundError:
-            print(f'[ZOO] Error: service-file "{file}" not found')
+            println('ZOO', f'Error: service-file "{file}" not found')
             continue
 
         if not hasattr(service, 'cmd'):
-            print(f'[ZOO] Error: service-file "{file}" does not contains "cmd" value')
+            println('ZOO', f'Error: service-file "{file}" does not contains "cmd" value')
             continue
 
         fill_by = {

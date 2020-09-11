@@ -17,9 +17,9 @@ while True:
 
     for service in response['data']:
         if service['finished']:
-            print(f'[{service["name"]}]: inactive (finished with code {service["returncode"]})')
+            print(f'[{service["name"]}] [{service["restarts"]}]: inactive (finished with code {service["returncode"]})')
         else:
-            print(f'[{service["name"]}]: active')
+            print(f'[{service["name"]}] [{service["restarts"]}]: active')
 
     sleep(0.2)
     system('clear')
