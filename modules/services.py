@@ -38,7 +38,7 @@ def get_output_updates(server, packet):
     if lines_read[packet.conn] + 1 == len(reader.output) and reader.finished:
         return server.send(packet, {'succ': False, 'data': 'service stopped'})
 
-    update_lines = reader.output[lines_read[packet.conn]:]
+    update_lines = reader.read_lines_from(lines_read[packet.conn])
 
     if update_lines and update_lines[-1] == '':
         update_lines = update_lines[:-1]

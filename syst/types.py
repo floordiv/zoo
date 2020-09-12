@@ -31,17 +31,28 @@ class Config:
 
 
 class Reader:
-    def __init__(self):
+    def __init__(self, maxlines=1000):
+        self.maxlines = maxlines
+
         self.output = ['']
         self.finished = False
         self.returncode = None
         self.restarts = 0
+        self.lines_removed = 0
 
     def write(self, char, **kwargs):
         if char == '\n':
+            if len(self.output) > self.maxlines:
+                self.output = self.output[1:]
+                self.lines_removed += 1
+
             return self.output.append('')
 
         self.output[-1] += char
+
+    def writeline(self, line):
+        for letter in line + '\n':
+            self.write(letter)
 
     def serialize(self):
         return {'out': '\n'.join(self.output),
@@ -60,6 +71,9 @@ class Reader:
 
     def readlines(self, n=1):
         return self.output[-n:]
+
+    def read_lines_from(self, n):
+        return self.output[n - self.lines_removed:]
 
 
 class PersonalReader:
