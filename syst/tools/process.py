@@ -12,14 +12,14 @@ def run(cmd, reader, path='.', autorestart=False, autorestart_timeout=.5):
         reader.finished = False
         reader.returncode = None
 
-        with Popen(split(cmd), stdout=PIPE, stderr=PIPE, cwd=path) as proc:
+        with Popen(split(cmd), stdout=PIPE, stderr=PIPE, cwd=path, encoding='utf-8') as proc:
             while True:
                 char = proc.stdout.read(1)
 
                 if char == b'' and proc.poll() is not None:
                     break
 
-                reader.write(char.decode())
+                reader.write(char)
 
         println('PROCESS', f'[{reader.restarts}] Process finished with exit-code {proc.returncode}: {cmd}')
 

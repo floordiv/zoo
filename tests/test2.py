@@ -1,9 +1,21 @@
 from time import sleep
+from threading import Thread
 
 
-print('hello')
-print('how are you?')
-sleep(1)
-print('I\'m fine')
-sleep(5)
-print('So, can we say, that everything works correctly?')
+def mainthread():
+    print('How are you?')
+    sleep(1)
+    print('Are you fine?')
+    sleep(1)
+    print('Thats great')
+
+
+def otherthread():
+    print('This should be written to our stdout')
+    sleep(1.5)
+    print('Is it?')
+    print('А ЕСЛИ ТАК?')
+
+
+Thread(target=otherthread).start()
+mainthread()

@@ -3,7 +3,7 @@ from os import abort
 import syst.tools.servicestools as st
 
 
-VERSION = '0.3.2'
+VERSION = '0.3.3'
 
 
 if __name__ == '__main__':
