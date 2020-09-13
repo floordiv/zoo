@@ -15,7 +15,7 @@ def remove_spaces(text):
     result = ''
 
     for letter in text:
-        if letter == ' ' and not in_string:
+        if letter in (' ', '\t') and not in_string:
             continue
 
         if letter == '"':

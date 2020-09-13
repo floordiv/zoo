@@ -52,6 +52,7 @@ def parse_service_files(service_files):
             'name': basename(file)[:-len('.service')],
             'autorestart': False,
             'restart_timeout': .5,
+            'output_maxlines': 1000,
         }
         service = fill_service_file(service, fill_by)
 
@@ -73,7 +74,7 @@ def load_environ_settings(file='syst/environ.settings'):
 
 def run_services(services_list):
     for service in services_list:
-        reader = Reader()
+        reader = Reader(service.output_maxlines)
         services.add(service.name, reader)
         Thread(target=run_process, args=(service.cmd, reader), kwargs={'path': service.path,
                                                                        'autorestart': service.autorestart,
