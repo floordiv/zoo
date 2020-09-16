@@ -9,9 +9,8 @@ import syst.tools.mproto as mproto
 from syst.tools.output import println
 
 
-SESSION_TIMEOUT = 720
 server = sys.modules[__name__]
-addr = ('', 7777)
+server_addr = ('', 7777)
 
 
 # I don't wanna catch KeyboardInterrupt in IfuckingDontKnowWhere, so, it's easier to make socket's object close-safe
@@ -50,7 +49,6 @@ def handle_connection(conn):
 
     try:
         while True:
-            conn.settimeout(SESSION_TIMEOUT)
             raw_packet = mproto.recvmsg(conn)
 
             if raw_packet == b'':
@@ -62,16 +60,14 @@ def handle_connection(conn):
                 println('SERVER', f'{ip}:{port} - received invalid packet ({raw_packet})')
                 continue
 
-            packet_object = types.Packet(conn, packet['type'], packet['data'])
+            other_variables = {key: val for key, val in packet.items() if key not in ('type', 'data')}
+
+            packet_object = types.Packet(conn, packet['type'], packet['data'], **other_variables)
             mworker.process_update(server, packet_object, threaded=False, check_all=False)
 
     except (BrokenPipeError,):
-        pass
-    except socket.timeout:
-        mproto.sendmsg(conn, dumps({'succ': False, 'data': 'disconnected (timeout reached)'}).encode())
-
-    conn.close()
-    println('SERVER', f'{ip}:{port} - disconnected')
+        conn.close()
+        println('SERVER', f'{ip}:{port} - disconnected')
 
 
 def validate_packet(raw_packet):
@@ -85,15 +81,16 @@ def validate_packet(raw_packet):
 
 
 def init():
+    ip, port = server_addr
+
+    if ip == '':
+        ip = 'global'
+
     try:
-        sock.bind(addr)
+        sock.bind(server_addr)
+        println('SERVER', f'{ip}:{port} - initialized')
     except OSError:
-        ip, port = addr
-
-        if ip == '':
-            ip = 'global'
-
         return println('SERVER', f'{ip}:{port} - failed to init, already in use')
 
     sock.listen(0)
-    Thread(target=accept_connections).start()
+    accept_connections()  # AHAHAHAHAHAHH AGAINST THE SYSTEM FUCK THE SYSTEM INITIALIZE

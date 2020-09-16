@@ -46,7 +46,7 @@ def parse_value(value):
         return value[1:-1]
     elif value in ('true', 'false'):
         return value == 'true'
-    elif value.isdigit():
+    elif value.isdigit() or value[0] in ('+', '-') and value[1:].isdigit():
         return int(value)
     elif value.replace('.', '').isdigit():
         return float(value)
