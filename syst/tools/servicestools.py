@@ -13,13 +13,25 @@ services = Services()
 
 
 def get_service_files():
-    if '-pack' in argv:
-        pack_file = argv[argv.index('-pack') + 1].strip('"').strip("'")  # remove quotes if they exists
+    return parse_service_files(argv[1:])
 
-        with open(pack_file) as pack:
-            return [file.rstrip() for file in pack if file.rstrip().endswith('.service')]
 
-    return [file for file in argv[1:] if file.endswith('.service')]
+def parse_service_files(files):
+    output_files = []
+
+    for file in files:
+        file = file.strip()
+
+        if file.endswith('.pack'):
+            with open(file) as packfile:
+                output_files.extend(parse_service_files(packfile))
+        elif file.endswith('.service'):
+            output_files.append(file)
+            println('ZOO:services', f'Added service file: {file}')
+        else:
+            println('ZOO:warning', f'Warning: "{file}": unknown extension. Skipped')
+
+    return output_files
 
 
 def fill_service_file(config, fill_by: dict):
@@ -30,7 +42,7 @@ def fill_service_file(config, fill_by: dict):
     return config
 
 
-def parse_service_files(service_files):
+def cook_service_files(service_files):
     cooked_services = []
 
     for file in service_files:
