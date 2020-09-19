@@ -52,11 +52,11 @@ def cook_service_files(service_files):
         try:
             service = Config(file)
         except FileNotFoundError:
-            println('ZOO', f'Error: service-file "{file}" not found')
+            println('ZOO:error', f'Error: service-file "{file}" not found')
             continue
 
         if not hasattr(service, 'cmd'):
-            println('ZOO', f'Error: service-file "{file}" does not contains "cmd" value')
+            println('ZOO:error', f'Error: service-file "{file}" does not contains "cmd" value. Skipped')
             continue
 
         fill_by = {

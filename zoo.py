@@ -1,14 +1,15 @@
 from os import abort
 from sys import argv
+from subprocess import Popen, PIPE
 
 from syst.tools.output import println
 import syst.tools.servicestools as st
 
 
-VERSION = '0.6.5'
+VERSION = '0.7.5'
 
 
-if __name__ == '__main__':
+def main():
     st.load_environ_settings()
 
     all_service_files = st.get_service_files()
@@ -29,3 +30,13 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print()
         abort()
+
+
+if __name__ == '__main__':
+    if '--daemon' in argv:
+        argv.remove('--daemon')
+
+        Popen(['python3'] + argv, stdout=PIPE, stderr=PIPE)
+        exit()
+
+    main()
