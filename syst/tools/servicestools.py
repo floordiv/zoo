@@ -1,6 +1,6 @@
 from sys import argv
-from os import environ
 from threading import Thread
+from os import environ, getpid
 from os.path import dirname, basename, expanduser
 
 from syst.tools.output import println
@@ -10,6 +10,14 @@ from syst.tools.process import run as run_process
 
 
 services = Services()
+
+
+def push_pid(to_file='pid'):
+    try:
+        with open(to_file, 'w') as file:
+            file.write(str(getpid()) + '\n')
+    except PermissionError:
+        println('ZOO:pid', f'Warning: failed to push pid to the file "{to_file}": permission denied')
 
 
 def get_service_files():

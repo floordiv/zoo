@@ -1,16 +1,17 @@
-from os import abort
 from sys import argv
+from os import abort
 from subprocess import Popen, PIPE
 
 from syst.tools.output import println
 import syst.tools.servicestools as st
 
 
-VERSION = '0.7.5'
+VERSION = '0.8.5'
 
 
 def main():
     st.load_environ_settings()
+    st.push_pid()
 
     all_service_files = st.get_service_files()
 
