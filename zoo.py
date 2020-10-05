@@ -6,7 +6,7 @@ from syst.tools.output import println
 import syst.tools.servicestools as st
 
 
-VERSION = '0.8.5'
+VERSION = '0.9.7'
 
 
 def main():
@@ -34,10 +34,8 @@ def main():
 
 
 if __name__ == '__main__':
-    if '--daemon' in argv:
-        argv.remove('--daemon')
-
-        Popen(['python3'] + argv, stdout=PIPE, stderr=PIPE)
-        exit()
-
-    main()
+    if '--nondaemon' in argv:
+        argv.remove('--nondaemon')
+        main()
+    else:
+        Popen(['python3'] + argv + ['--nondaemon'], stdout=PIPE, stderr=PIPE)

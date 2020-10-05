@@ -42,7 +42,7 @@ class Reader:
 
     def write(self, char, **kwargs):
         if char == '\n':
-            if len(self.output) > self.maxlines:
+            if 0 < self.maxlines < len(self.output):
                 self.output = self.output[1:]
                 self.lines_removed += 1
 
@@ -51,7 +51,7 @@ class Reader:
         self.output[-1] += char
 
     def writeline(self, line):
-        for letter in line + '\n':
+        for letter in line:
             self.write(letter)
 
     def serialize(self):
@@ -130,4 +130,4 @@ class Services:
         return [service for service, reader in self._services if reader.finished and reader.returncode != 0]
 
     def __str__(self):
-        return f'Services(_services={self._services})'
+        return f'Services(services={self._services})'

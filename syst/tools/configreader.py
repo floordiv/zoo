@@ -40,7 +40,7 @@ def split_by_equality(text):
 
 
 def parse_value(value):
-    value = value.rstrip()   # remove escape-characters
+    value = value.rstrip()   # remove \n
 
     if value[0] == '"' and value[-1] == '"':
         return value[1:-1]

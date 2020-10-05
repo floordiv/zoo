@@ -1,15 +1,21 @@
 import socket
+from sys import argv
 from json import loads
 from time import sleep
 
 import mproto
 
 
+if len(argv) < 3:
+    print('Error: bad syntax. Try python3 service_output.py <ip> <service-name>')
+    exit()
+
+
 sock = socket.socket()
-sock.connect(('127.0.0.1', 7777))
+sock.connect((argv[1], 7777))
 
 while True:
-    mproto.sendmsg(sock, b'{"type": "get-output-updates", "data": "Hawthorn"}')
+    mproto.sendmsg(sock, b'{"type": "get-output-updates", "data": "%s"}' % argv[2].encode())
     response = mproto.recvmsg(sock)
     jsonified_response = loads(response.decode())
 

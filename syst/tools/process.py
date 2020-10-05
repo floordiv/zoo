@@ -24,7 +24,7 @@ def run(cmd, reader, path='.', autorestart=False, autorestart_timeout=.5):
 
         println('PROCESS', f'[{reader.restarts}] {cmd}: finished with code {proc.returncode}')
 
-        reader.writeline(f'---- finished (code: {proc.returncode}) ----')
+        reader.writeline(f'---- finished (code: {proc.returncode}) ----\n\n')
         reader.finished = True
         reader.returncode = proc.returncode
 
