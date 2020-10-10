@@ -4,3 +4,6 @@ Command to start a daemon-service:
 
 Where:
     python3 - python 3.6+
+
+
+Your services will be started as daemons automatically. If you wanna see zoo live logs - add --nondaemon argument to the command
