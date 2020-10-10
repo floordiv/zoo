@@ -1,0 +1,6 @@
+Command to start a daemon-service:
+    python3 zoo.py some.service some.pack "path/to/file.service" "path/to/file.pack"
+
+
+Where:
+    python3 - python 3.6+
