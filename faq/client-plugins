@@ -1,0 +1,5 @@
+Client Plugins - programs, which are connecting the Zoo server, requesting
+any data, and displaying it to you. Simple library is also available (client-plugins/plugin.py).
+
+I don't wanna write some complex plugins for something especial, so, only viewing output of
+your service and viewing active services are available

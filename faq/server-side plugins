@@ -1,0 +1,6 @@
+Zoo - aloe-server based tool, so, it is really flexible for plugins.
+Nowadays, Zoo server can show you active services, and their output.
+But nobody can forbid you to write your own server-plugins for, as
+example, server's cpu load, or something else. Or even broadcast server.
+You can do everything you want with Zoo! How good, that this software
+gives you this opportunity.

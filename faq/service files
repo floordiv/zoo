@@ -1,0 +1,39 @@
+How to: write service file for your service
+
+Service file is a simple config of your service runner
+Service file should has an extension ".service"
+It has only one required field: "cmd".
+This field contains a command (full command: it may contain any string),
+with which one your service will be started.
+
+See about .pack files below.
+
+Non-required fields are just additional settings. There are such available fields:
+  - name [string]: service's name
+  - path [string]: executable file's path (. is default value; means that executable file in the
+                                           same dir as .service file; ./ means that executable file
+                                           is in the current ZOO PROCESS active directory)
+  - autorestart [true/false]: whether service will be restarted after finishing. Disabled by default
+  - restart_timeout [number]: autorestart timeout (in seconds; float accepted)
+  - output_maxlines [number]: how much output's lines will be kept in memory
+
+
+Service config syntax:
+  string="any string"
+  another_string = 'this is accepted, too'
+
+  integer=1
+  another_integer= -1
+
+  float=1.5
+  another_float= -1.5
+
+  bool=true
+  another_bool=false
+
+
+[.pack files]
+.pack file is a file, which contains paths to .service files (or even another .pack files)
+.pack file syntax:
+  path/to/service/file.service
+  path/to/pack/file.pack
